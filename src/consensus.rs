@@ -1,13 +1,24 @@
-/// Pure, `no_std`-compatible consensus logic — **no Soroban `Env` dependency**.
-///
-/// This module contains the arithmetic and state-transition rules for the
-/// weighted guardian consensus. Keeping this logic free of SDK types allows
-/// Kani (and other model checkers) to formally verify it without mocking the
-/// Soroban host environment.
-///
-/// The contract's `vote()` entry point delegates to [`apply_vote`] after
-/// performing all authentication, authorisation, and storage I/O.
-///
+//! Pure, `no_std`-compatible consensus logic — **no Soroban `Env` dependency**.
+//!
+//! This module contains the arithmetic and state-transition rules for the
+//! weighted guardian consensus. Keeping this logic free of SDK types allows
+//! Kani (and other model checkers) to formally verify it without mocking the
+//! Soroban host environment.
+//!
+//! The contract's `vote()` entry point delegates to [`apply_vote`] after
+//! performing all authentication, authorisation, and storage I/O.
+//!
+//! ## Test placement
+//!
+//! Unlike the rest of the crate, this module's unit tests are **not** inline
+//! — they live in `tests/consensus.rs` in keeping with the crate-wide
+//! convention of placing all tests under `tests/`.  The tests there are
+//! deliberately Soroban-free (no `Env`, no `testutils`) for the same reason
+//! this module is: so that Kani and other model checkers can consume them
+//! without a host-environment mock.  Complementary coverage is provided by
+//! the Kani harnesses in `verification/` and the runtime invariant checks in
+//! `tests/safety_invariants.rs`.
+
 /// Errors that can arise purely from consensus arithmetic.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ConsensusError {
